@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ms Lê Hằng English - IELTS Reading Mock Test</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <!-- Canvas Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Nunito', 'sans-serif'],
+                    },
+                    colors: {
+                        ielts: {
+                            blue: '#0052cc',
+                            dark: '#172b4d',
+                            light: '#f4f5f7',
+                            accent: '#ffab00',
+                            correct: '#36b37e',
+                            wrong: '#ff5630',
+                            purple: '#8b5cf6'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom Scrollbar for independent panels */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        /* Text Highlighting Effect */
+        ::selection {
+            background-color: #a78bfa;
+            color: #ffffff;
+        }
+        .user-highlight {
+            background-color: #a78bfa !important;
+            color: #ffffff !important;
+            padding: 2px 4px;
+            border-radius: 4px;
+        }
+
+        /* Locate evidence flash animation */
+        @keyframes evidencePulse {
+            0% { background-color: rgba(254, 240, 138, 0.9); transform: scale(1.01); }
+            50% { background-color: rgba(253, 224, 71, 0.9); transform: scale(1.02); }
+            100% { background-color: transparent; transform: scale(1); }
+        }
+        .highlight-evidence {
+            animation: evidencePulse 2.5s ease-in-out forwards;
+            border-left: 4px solid #eab308;
+            padding-left: 8px;
+            border-radius: 4px;
+        }
+
+        .btn-3d {
+            transition: all 0.15s ease;
+            box-shadow: 0 4px 0 rgba(0,0,0,0.15);
+        }
+        .btn-3d:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 0 rgba(0,0,0,0.15);
+        }
+        .btn-3d:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 rgba(0,0,0,0.15);
+        }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans text-gray-800 h-screen flex flex-col overflow-hidden selection:bg-purple-400 selection:text-white">
+
+    <!-- COMPACT TOP HEADER & PROMO BANNER -->
+    <header class="bg-slate-900 text-white px-4 py-2 flex flex-wrap justify-between items-center shadow-md border-b border-slate-700 z-30 shrink-0">
+        <div class="flex items-center space-x-3">
+            <span class="bg-amber-500 text-slate-900 font-extrabold text-xs uppercase px-2 py-1 rounded shadow">Ms Lê Hằng English</span>
+            <h1 class="text-sm md:text-base font-bold text-slate-100 tracking-wide">IELTS READING MOCK TEST</h1>
+        </div>
+        <div class="text-xs md:text-sm font-semibold bg-slate-800 text-amber-300 px-3 py-1 rounded-full border border-amber-500/30">
+            <i class="fa-solid fa-graduation-cap mr-1"></i> Đăng ký học Tiếng Anh 1-12, IELTS liên hệ Ms Lê Hằng: <span class="text-white font-bold underline decoration-amber-400">Zalo 0584 965 348</span>
+        </div>
+    </header>
+
+    <!-- CONTROL BAR WITH TIMER & CONTROLS -->
+    <div class="bg-white border-b border-gray-200 px-6 py-2.5 flex justify-between items-center shadow-sm z-20 shrink-0">
+        <div class="flex items-center space-x-4">
+            <div class="flex items-center space-x-2 bg-slate-100 px-3 py-1.5 rounded-xl border border-gray-300">
+                <i class="fa-regular fa-clock text-indigo-600 text-lg"></i>
+                <span id="timer-display" class="font-mono text-xl font-black text-slate-800">20:00</span>
+            </div>
+            <button id="btn-timer-toggle" onclick="toggleTimer()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs uppercase px-4 py-2 rounded-xl transition shadow flex items-center gap-1.5 btn-3d">
+                <i id="timer-icon" class="fa-solid fa-play"></i>
+                <span id="timer-btn-text">BẮT ĐẦU TÍNH GIỜ LÀM BÀI</span>
+            </button>
+        </div>
+
+        <div class="flex items-center space-x-3">
+            <div class="text-xs font-bold text-slate-500 hidden md:block">
+                Tiến độ: <span id="progress-text" class="text-indigo-600">0/14</span>
+            </div>
+            <div class="w-32 bg-gray-200 rounded-full h-2.5 hidden md:block overflow-hidden">
+                <div id="progress-bar" class="bg-indigo-600 h-2.5 rounded-full w-0 transition-all duration-300"></div>
+            </div>
+            <button onclick="submitTest()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-sm px-5 py-2 rounded-xl shadow transition btn-3d flex items-center gap-2">
+                <i class="fa-solid fa-paper-plane"></i> NỘP BÀI
+            </button>
+        </div>
+    </div>
+
+    <!-- MAIN SPLIT-SCREEN CONTENT CONTAINER -->
+    <div class="flex-1 flex flex-col md:flex-row overflow-hidden relative">
+        
+        <!-- LEFT PANEL: READING PASSAGE & GLOSSARY -->
+        <div id="left-panel" class="w-full md:w-1/2 h-full overflow-y-auto p-4 md:p-6 bg-slate-50 border-r border-gray-300 space-y-6">
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200">
+                <div class="border-b pb-4 mb-6">
+                    <span class="text-xs font-bold text-indigo-600 uppercase tracking-wider">READING PASSAGE 1</span>
+                    <h2 class="text-2xl font-black text-slate-900 mt-1">INCORRECT TERMINOLOGY IN SCIENCE</h2>
+                </div>
+
+                <!-- Paragraph A -->
+                <div id="para-A" class="para-block space-y-3 p-3 rounded-lg transition-colors">
+                    <p class="text-justify leading-relaxed text-slate-800 font-medium">
+                        <span class="font-black text-indigo-700 text-lg mr-1">A.</span> Science plays an increasingly significant role in people's lives, making the faithful communication of scientific developments more important than ever. Yet such communication is fraught with challenges that can easily distort discussions, leading to unnecessary confusion and misunderstandings.
+                    </p>
+                    <button onclick="toggleTranslation('trans-A')" class="text-xs font-bold text-indigo-600 hover:text-indigo-800 bg-indigo-50 hover:bg-indigo-100 px-3 py-1.5 rounded-lg border border-indigo-200 transition flex items-center gap-1.5">
+                        <span>Mở dịch đoạn này 🌟</span>
+                    </button>
+                    <div id="trans-A" class="hidden p-4 bg-indigo-50/60 rounded-xl border border-indigo-100 text-sm text-slate-700 leading-relaxed italic">
+                        <strong>Dịch nghĩa Paragraph A:</strong> Khoa học đóng vai trò ngày càng quan trọng trong cuộc sống con người, khiến việc truyền thông chính xác các phát triển khoa học trở nên quan trọng hơn bao giờ hết. Tuy nhiên, việc truyền thông như vậy gặp phải nhiều thách thức có thể dễ dàng làm bóp méo các thảo luận, dẫn đến những sự hiểu lầm và nhầm lẫn không đáng có.
+                    </div>
+                </div>
+
+                <!-- Paragraph B -->
+                <div id="para-B" class="para-block space-y-3 p-3 rounded-lg transition-colors">
+                    <p class="text-justify leading-relaxed text-slate-800 font-medium">
+                        <span class="font-black text-indigo-700 text-lg mr-1">B.</span> Some problems stem from the esoteric nature of current research and the associated difficulty of finding sufficiently faithful terminology. Abstraction and complexity are not signs that a given scientific direction is wrong, as some commentators have suggested, but are instead a tribute to the success of human ingenuity in meeting the increasingly complex challenges that nature presents. They can, however, make communication more difficult. But many of the biggest challenges for science reporting arise because in areas of evolving research, scientists themselves often only partly understand the full implications of any particular advance or development. Since that dynamic applies to most of the scientific developments that directly affect people's lives: global warming, cancer research, diet studies — learning how to overcome it is critical to spurring a more informed scientific debate among the broader public.
+                    </p>
+                    <button onclick="toggleTranslation('trans-B')" class="text-xs font-bold text-indigo-600 hover:text-indigo-800 bg-indigo-50 hover:bg-indigo-100 px-3 py-1.5 rounded-lg border border-indigo-200 transition flex items-center gap-1.5">
+                        <span>Mở dịch đoạn này 🌟</span>
+                    </button>
+                    <div id="trans-B" class="hidden p-4 bg-indigo-50/60 rounded-xl border border-indigo-100 text-sm text-slate-700 leading-relaxed italic">
+                        <strong>Dịch nghĩa Paragraph B:</strong> Một số vấn đề bắt nguồn từ bản chất thâm thúy/chuyên sâu của các nghiên cứu hiện tại và khó khăn trong việc tìm ra thuật ngữ đủ chính xác. Tính trừu tượng và sự phức tạp không phải là dấu hiệu cho thấy một hướng đi khoa học là sai lầm như một số nhà bình luận gợi ý, mà thay vào đó là minh chứng cho sự thành công của trí tuệ con người khi đối mặt với các thách thức ngày càng phức tạp từ tự nhiên. Tuy nhiên, chúng có thể làm cho giao tiếp trở nên khó khăn hơn. Nhưng nhiều thách thức lớn nhất đối với báo cáo khoa học xuất hiện vì trong các lĩnh vực nghiên cứu đang phát triển, chính các nhà khoa học cũng thường chỉ hiểu một phần tác động/hệ quả đầy đủ của bất kỳ sự tiến bộ nào. Vì động lực đó áp dụng cho hầu hết các phát triển khoa học ảnh hưởng trực tiếp đến đời sống con người: biến đổi khí hậu, nghiên cứu ung thư, nghiên cứu chế độ ăn uống — việc học cách vượt qua nó là vô cùng quan trọng để thúc đẩy một cuộc tranh luận khoa học có tri thức hơn trong công chúng.
+                    </div>
+                </div>
+
+                <!-- Paragraph C -->
+                <div id="para-C" class="para-block space-y-3 p-3 rounded-lg transition-colors">
+                    <p class="text-justify leading-relaxed text-slate-800 font-medium">
+                        <span class="font-black text-indigo-700 text-lg mr-1">C.</span> Ambiguous word choices are the source of some misunderstandings. Scientists often employ colloquial terminology, which they then assign a specific meaning that is impossible to fathom without proper training. The term "relativity," for example, is intrinsically misleading. Many interpret the theory to mean that everything is relative and there are no absolutes. Yet although the measurements any observer makes depend on his coordinates and reference frame, the physical phenomena he measures have an invariant description that transcends that observer's particular coordinates. Einstein's theory of relativity is really about finding an invariant description of physical phenomena. True, Einstein agreed with the idea that his theory would have been better named "Invarianten theory." But the term - "relativity" was already entrenched at the time for him to change.
+                    </p>
+                    <button onclick="toggleTranslation('trans-C')" class="text-xs font-bold text-indigo-600 hover:text-indigo-800 bg-indigo-50 hover:bg-indigo-100 px-3 py-1.5 rounded-lg border border-indigo-200 transition flex items-center gap-1.5">
+                        <span>Mở dịch đoạn này 🌟</span>
+                    </button>
+                    <div id="trans-C" class="hidden p-4 bg-indigo-50/60 rounded-xl border border-indigo-100 text-sm text-slate-700 leading-relaxed italic">
+                        <strong>Dịch nghĩa Paragraph C:</strong> Việc lựa chọn từ ngữ mơ hồ là nguồn gốc của một số hiểu lầm. Các nhà khoa học thường sử dụng thuật ngữ thông dụng/thông thoại, sau đó gán cho nó một ý nghĩa cụ thể mà không thể hiểu nổi nếu không có sự đào tạo bài bản. Ví dụ, thuật ngữ "thuyết tương đối" về bản chất là gây hiểu lầm. Nhiều người hiểu thuyết này có nghĩa là mọi thứ đều tương đối và không có gì là tuyệt đối. Tuy nhiên, mặc dù các phép đo mà bất kỳ người quan sát nào thực hiện đều phụ thuộc vào tọa độ và hệ quy chiếu của anh ta, các hiện tượng vật lý mà anh ta đo đạc lại có một mô tả bất biến vượt lên trên các tọa độ riêng biệt của người quan sát đó. Thuyết tương đối của Einstein thực chất là về việc tìm ra một mô tả bất biến về các hiện tượng vật lý. Đúng là Einstein đồng ý với ý kiến rằng thuyết của ông sẽ tốt hơn nếu được gọi là "Thuyết bất biến" (Invarianten theory). Nhưng thuật ngữ "tương đối" vào thời điểm đó đã quá ăn sâu cắm rễ khiến ông không thể thay đổi được nữa.
+                    </div>
+                </div>
+
+                <!-- Paragraph D -->
+                <div id="para-D" class="para-block space-y-3 p-3 rounded-lg transition-colors">
+                    <p class="text-justify leading-relaxed text-slate-800 font-medium">
+                        <span class="font-black text-indigo-700 text-lg mr-1">D.</span> "The uncertainty principle" is another frequently abused term. It is sometimes interpreted as a limitation on observers and their ability to make measurements. But it is not about intrinsic limitations on any one particular measurement; it is about the inability to precisely measure particular pairs of quantities simultaneously. The first interpretation is perhaps more engaging from a philosophical or political perspective. It's just not what science is about.
+                    </p>
+                    <button onclick="toggleTranslation('trans-D')" class="text-xs font-bold text-indigo-600 hover:text-indigo-800 bg-indigo-50 hover:bg-indigo-100 px-3 py-1.5 rounded-lg border border-indigo-200 transition flex items-center gap-1.5">
+                        <span>Mở dịch đoạn này 🌟</span>
+                    </button>
+                    <div id="trans-D" class="hidden p-4 bg-indigo-50/60 rounded-xl border border-indigo-100 text-sm text-slate-700 leading-relaxed italic">
+                        <strong>Dịch nghĩa Paragraph D:</strong> "Nguyên lý bất định" là một thuật ngữ khác thường xuyên bị lạm dụng. Đôi khi nó được diễn giải như một sự hạn chế đối với người quan sát và khả năng thực hiện phép đo của họ. Nhưng nó không phải là về những hạn chế nội tại đối với bất kỳ một phép đo cụ thể nào; nó là về việc không thể đo chính xác đồng thời một cặp đại lượng nhất định. Cách diễn giải đầu tiên có lẽ hấp dẫn hơn từ góc độ triết học hoặc chính trị. Chỉ là nó không phải là bản chất của khoa học.
+                    </div>
+                </div>
+
+                <!-- Paragraph E -->
+                <div id="para-E" class="para-block space-y-3 p-3 rounded-lg transition-colors">
+                    <p class="text-justify leading-relaxed text-slate-800 font-medium">
+                        <span class="font-black text-indigo-700 text-lg mr-1">E.</span> Even the word "theory" can be a problem. Unlike most people, who use the word to describe a passing conjecture that they often regard as suspect, physicists have very specific ideas in mind when they talk about theories. For physicists, theories entail a definite physical framework embodied in a set of fundamental assumptions about the world that lead to a specific set of equations and predictions — ones that are borne out by successful predictions. Theories aren't necessarily shown to be correct or complete immediately. Even Einstein took the better part of a decade to develop the correct version of his theory of general relativity. But eventually both the ideas and the measurements settle down and theories are either proven correct, abandoned or absorbed into other, more encompassing theories.
+                    </p>
+                    <button onclick="toggleTranslation('trans-E')" class="text-xs font-bold text-indigo-600 hover:text-indigo-800 bg-indigo-50 hover:bg-indigo-100 px-3 py-1.5 rounded-lg border border-indigo-200 transition flex items-center gap-1.5">
+                        <span>Mở dịch đoạn này 🌟</span>
+                    </button>
+                    <div id="trans-E" class="hidden p-4 bg-indigo-50/60 rounded-xl border border-indigo-100 text-sm text-slate-700 leading-relaxed italic">
+                        <strong>Dịch nghĩa Paragraph E:</strong> Ngay cả từ "thuyết/lý thuyết" cũng có thể là một vấn đề. Không giống như hầu hết mọi người, những người sử dụng từ này để mô tả một giả đoán thoáng qua mà họ thường coi là đáng ngờ, các nhà vật lý có những ý tưởng rất cụ thể trong đầu khi họ nói về các lý thuyết. Đối với các nhà vật lý, lý thuyết đòi hỏi một khuôn khổ vật lý nhất định được thể hiện trong một tập hợp các giả định cơ bản về thế giới dẫn đến một tập hợp các phương trình và dự đoán cụ thể — những điều được chứng minh bằng các dự đoán thành công. Lý thuyết không nhất thiết phải được chứng minh là đúng hoặc hoàn chỉnh ngay lập tức. Ngay cả Einstein cũng mất gần mười năm để phát triển phiên bản chính xác của thuyết tương đối tổng quát của mình. Nhưng cuối cùng cả ý tưởng và các phép đo sẽ ổn định và các lý thuyết sẽ được chứng minh là đúng, bị bãi bỏ hoặc được hấp thụ vào các lý thuyết khác bao quát hơn.
+                    </div>
+                </div>
+
+                <!-- Paragraph F -->
+                <div id="para-F" class="para-block space-y-3 p-3 rounded-lg transition-colors">
+                    <p class="text-justify leading-relaxed text-slate-800 font-medium">
+                        <span class="font-black text-indigo-700 text-lg mr-1">F.</span> "Global warming" is another example of problematic terminology. Climatologists predict more drastic fluctuations in temperature and rainfall — not necessarily that every place will be warmer. The name sometimes subverts the debate, since it lets people argue that their winter was worse, so how could there be global warming? Clearly "global climate change" would have been a better name. But not all problems stem solely from poor word choices. Some stem from the intrinsically complex nature of much of modern science. Science sometimes transcends this limitation: remarkably, chemists were able to detail the precise chemical processes involved in the destruction of the ozone layer, making the evidence that chlorofluorocarbon gases (Freon, for example) were destroying the ozone layer indisputably.
+                    </p>
+                    <button onclick="toggleTranslation('trans-F')" class="text-xs font-bold text-indigo-600 hover:text-indigo-800 bg-indigo-50 hover:bg-indigo-100 px-3 py-1.5 rounded-lg border border-indigo-200 transition flex items-center gap-1.5">
+                        <span>Mở dịch đoạn này 🌟</span>
+                    </button>
+                    <div id="trans-F" class="hidden p-4 bg-indigo-50/60 rounded-xl border border-indigo-100 text-sm text-slate-700 leading-relaxed italic">
+                        <strong>Dịch nghĩa Paragraph F:</strong> "Nóng lên toàn cầu" là một ví dụ khác về thuật ngữ gây tranh cãi. Các nhà khí hậu học dự đoán sự biến động mạnh mẽ hơn về nhiệt độ và lượng mưa — không nhất thiết là mọi nơi đều sẽ nóng hơn. Cái tên này đôi khi làm suy yếu cuộc tranh luận, vì nó khiến mọi người lập luận rằng mùa đông của họ khắc nghiệt hơn, vậy làm sao có thể có sự nóng lên toàn cầu? Rõ ràng "biến đổi khí hậu toàn cầu" sẽ là một cái tên tốt hơn. Nhưng không phải tất cả các vấn đề đều chỉ bắt nguồn từ sự lựa chọn từ ngữ kém. Một số bắt nguồn từ bản chất phức tạp nội tại của hầu hết khoa học hiện đại. Khoa học đôi khi vượt qua hạn chế này: thật đáng kinh ngạc, các nhà hóa học đã có thể mô tả chi tiết các quá trình hóa học chính xác liên quan đến việc phá hủy tầng ozon, làm cho bằng chứng rằng khí chlorofluorocarbon (ví dụ Freon) đang phá hủy tầng ozon trở nên không thể chối cãi.
+                    </div>
+                </div>
+
+                <!-- Paragraph G -->
+                <div id="para-G" class="para-block space-y-3 p-3 rounded-lg transition-colors">
+                    <p class="text-justify leading-relaxed text-slate-800 font-medium">
+                        <span class="font-black text-indigo-700 text-lg mr-1">G.</span> A better understanding of the mathematical significance of results and less insistence on a simple story would help to clarify many scientific discussions. For several months, Harvard was tortured by empty debates over the relative intrinsic scientific abilities of men and women. One of the more amusing aspects of the discussion was that those who believed in the differences and those who didn't used the same evidence about gender-specific special ability. How could that be? The answer is that the data shows no substantial effects. Social factors might account for these tiny differences, which in any case have an unclear connection to scientific ability. Not much of a headline when phrased that way, is it? Each type of science has its own source of complexity and potential for miscommunication. Yet there are steps we can take to improve public understanding in all cases. The first would be to inculcate greater understanding and acceptance of indirect scientific evidence. The information from an unmanned space mission is no less legitimate than the information from one in which people are on board.
+                    </p>
+                    <button onclick="toggleTranslation('trans-G')" class="text-xs font-bold text-indigo-600 hover:text-indigo-800 bg-indigo-50 hover:bg-indigo-100 px-3 py-1.5 rounded-lg border border-indigo-200 transition flex items-center gap-1.5">
+                        <span>Mở dịch đoạn này 🌟</span>
+                    </button>
+                    <div id="trans-G" class="hidden p-4 bg-indigo-50/60 rounded-xl border border-indigo-100 text-sm text-slate-700 leading-relaxed italic">
+                        <strong>Dịch nghĩa Paragraph G:</strong> Việc hiểu rõ hơn về ý nghĩa toán học của các kết quả và bớt khăng khăng đòi hỏi một câu chuyện đơn giản sẽ giúp làm rõ nhiều cuộc thảo luận khoa học. Trong nhiều tháng, Đại học Harvard đã bị dằn dằn bởi các cuộc tranh luận rỗng tuếch về khả năng khoa học nội tại tương đối của nam giới và nữ giới. Một trong những khía cạnh thú vị hơn của cuộc thảo luận là cả những người tin vào sự khác biệt và những người không tin đều sử dụng cùng một bằng chứng về khả năng đặc biệt theo giới tính. Làm sao lại như vậy được? Câu trả lời là dữ liệu không cho thấy hiệu ứng đáng kể nào. Các yếu tố xã hội có thể giải thích cho những nhỉnh khác biệt nhỏ này, và dù sao đi nữa chúng cũng có mối liên hệ không rõ ràng với khả năng khoa học. Không có gì đáng làm tiêu đề báo chí khi diễn đạt theo cách đó, đúng không? Mỗi loại hình khoa học đều có nguồn gốc phức tạp và tiềm năng gây hiểu lầm riêng. Tuy nhiên, có những bước chúng ta có thể thực hiện để cải thiện sự hiểu biết của công chúng trong mọi trường hợp. Điều đầu tiên sẽ là khắc ghi sự hiểu biết và chấp nhận lớn hơn đối với bằng chứng khoa học gián tiếp. Thông tin từ một sứ mệnh vũ trụ không người lái không kém phần hợp pháp so với thông tin từ một sứ mệnh có con người trên tàu.
+                    </div>
+                </div>
+
+                <!-- Paragraph H -->
+                <div id="para-H" class="para-block space-y-3 p-3 rounded-lg transition-colors">
+                    <p class="text-justify leading-relaxed text-slate-800 font-medium">
+                        <span class="font-black text-indigo-700 text-lg mr-1">H.</span> This doesn't mean never questioning an interpretation, but it also doesn't mean equating indirect evidence with blind belief, as people sometimes suggest. Second, we might need different standards for evaluating science with urgent policy implications than research with purely theoretical value. When scientists say they are not certain about their predictions, it doesn't necessarily mean they've found nothing substantial. It would be better if scientists were more open about the mathematical significance of their results and if the public didn't treat math as quite so scary. Statistics and errors, which tell us the uncertainty in a measurement, give us the tools to evaluate new developments fairly.
+                    </p>
+                    <button onclick="toggleTranslation('trans-H')" class="text-xs font-bold text-indigo-600 hover:text-indigo-800 bg-indigo-50 hover:bg-indigo-100 px-3 py-1.5 rounded-lg border border-indigo-200 transition flex items-center gap-1.5">
+                        <span>Mở dịch đoạn này 🌟</span>
+                    </button>
+                    <div id="trans-H" class="hidden p-4 bg-indigo-50/60 rounded-xl border border-indigo-100 text-sm text-slate-700 leading-relaxed italic">
+                        <strong>Dịch nghĩa Paragraph H:</strong> Điều này không có nghĩa là không bao giờ nghi ngờ một cách diễn giải, nhưng nó cũng không có nghĩa là đánh đồng bằng chứng gián tiếp với niềm tin mù quáng như mọi người đôi khi gợi ý. Thứ hai, chúng ta có thể cần các tiêu chuẩn khác nhau để đánh giá khoa học có hàm ý chính sách cấp thiết so với nghiên cứu có giá trị lý thuyết thuần túy. Khi các nhà khoa học nói rằng họ không chắc chắn về các dự đoán của mình, điều đó không nhất thiết có nghĩa là họ không tìm thấy điều gì đáng kể. Sẽ tốt hơn nếu các nhà khoa học cởi mở hơn về ý nghĩa toán học của các kết quả của họ và nếu công chúng không coi toán học là quá đáng sợ. Thống kê và sai số, những thứ cho chúng ta biết độ bất định trong một phép đo, cho chúng ta công cụ để đánh giá các phát triển mới một cách công bằng.
+                    </div>
+                </div>
+
+                <!-- Paragraph I -->
+                <div id="para-I" class="para-block space-y-3 p-3 rounded-lg transition-colors">
+                    <p class="text-justify leading-relaxed text-slate-800 font-medium">
+                        <span class="font-black text-indigo-700 text-lg mr-1">I.</span> But most importantly, people have to recognize that science can be complex. If we accept only simple stories, the description will necessarily be distorted. When advances are subtle or complicated, scientists should be willing to go the extra distance to give proper explanations and be patient about the truth. Even so, some difficulties are unavoidable. Most developments reflect work in progress, so the story is complex because no one yet knows the big picture.
+                    </p>
+                    <button onclick="toggleTranslation('trans-I')" class="text-xs font-bold text-indigo-600 hover:text-indigo-800 bg-indigo-50 hover:bg-indigo-100 px-3 py-1.5 rounded-lg border border-indigo-200 transition flex items-center gap-1.5">
+                        <span>Mở dịch đoạn me 🌟</span>
+                    </button>
+                    <div id="trans-I" class="hidden p-4 bg-indigo-50/60 rounded-xl border border-indigo-100 text-sm text-slate-700 leading-relaxed italic">
+                        <strong>Dịch nghĩa Paragraph I:</strong> Nhưng quan trọng nhất, mọi người phải nhận ra rằng khoa học có thể rất phức tạp. Nếu chúng ta chỉ chấp nhận những câu chuyện đơn giản, mô tả đó nhất định sẽ bị bóp méo. Khi các tiến bộ mang tính tinh vi hoặc phức tạp, các nhà khoa học nên sẵn sàng nỗ lực nhiều hơn nữa để đưa ra lời giải thích thích hợp và kiên nhẫn với sự thật. Dù vậy, một số khó khăn là không thể tránh khỏi. Hầu hết các phát triển đều phản ánh công việc đang diễn ra, vì vậy câu chuyện phức tạp là do chưa ai biết được bức tranh toàn cảnh.
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- ACADEMIC GLOSSARY TABLE (50+ WORDS) -->
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 space-y-4">
+                <div class="border-b pb-3 flex justify-between items-center">
+                    <h3 class="text-lg font-black text-slate-900 flex items-center gap-2">
+                        <i class="fa-solid fa-book-bookmark text-indigo-600"></i>
+                        BẢNG TỪ VỰNG ACADEMIC (GLOSSARY B2-C2)
+                    </h3>
+                    <span class="text-xs font-bold bg-indigo-100 text-indigo-700 px-2.5 py-1 rounded-full">50+ Academic Words</span>
+                </div>
+                <div class="overflow-x-auto max-h-96">
+                    <table class="w-full text-xs text-left text-slate-700 border-collapse">
+                        <thead class="text-xs uppercase bg-slate-100 text-slate-700 sticky top-0 border-b border-gray-200">
+                            <tr>
+                                <th class="py-2.5 px-3 font-extrabold">Từ vựng (Vocabulary)</th>
+                                <th class="py-2.5 px-3 font-extrabold">Loại từ</th>
+                                <th class="py-2.5 px-3 font-extrabold">Nghĩa tiếng Việt & Đồng nghĩa (Synonyms)</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100 font-medium" id="glossary-tbody">
+                            <!-- Populated dynamically via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- RIGHT PANEL: EXERCISES & QUESTIONS -->
+        <div id="right-panel" class="w-full md:w-1/2 h-full overflow-y-auto p-4 md:p-6 bg-white space-y-8">
+            
+            <!-- SECTION 1: QUESTIONS 27-31 -->
+            <div class="bg-slate-50 p-6 rounded-2xl border border-gray-200 space-y-6">
+                <div class="border-b border-gray-200 pb-3">
+                    <h3 class="font-black text-base text-slate-900">Questions 27–31</h3>
+                    <p class="text-xs font-semibold text-slate-600">Choose the correct answer A, B, C or D.</p>
+                </div>
+
+                <!-- Q27 -->
+                <div id="q27-box" class="space-y-3 bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
+                    <p class="font-bold text-sm text-slate-900"><span class="text-indigo-600 font-black">27.</span> Why is the faithful communication of science important?</p>
+                    <div class="space-y-2 text-xs" id="q27-options">
+                        <label onclick="checkMCQ(27, 'A')" class="mcq-option flex items-start gap-2.5 p-3 rounded-xl border border-gray-200 cursor-pointer hover:bg-slate-50 transition">
+                            <input type="radio" name="q27" value="A" class="mt-0.5">
+                            <span><strong>A.</strong> Science plays an increasingly significant role in people's lives.</span>
+                        </label>
+                        <label onclick="checkMCQ(27, 'B')" class="mcq-option flex items-start gap-2.5 p-3 rounded-xl border border-gray-200 cursor-pointer hover:bg-slate-50 transition">
+                            <input type="radio" name="q27" value="B" class="mt-0.5">
+                            <span><strong>B.</strong> Science is fraught with challenges the public are interested in.</span>
+                        </label>
+                        <label onclick="checkMCQ(27, 'C')" class="mcq-option flex items-start gap-2.5 p-3 rounded-xl border border-gray-200 cursor-pointer hover:bg-slate-50 transition">
+                            <input type="radio" name="q27" value="C" class="mt-0.5">
+                            <span><strong>C.</strong> The nature of complexity in science communication leads to confusion.</span>
+                        </label>
+                        <label onclick="checkMCQ(27, 'D')" class="mcq-option flex items-start gap-2.5 p-3 rounded-xl border border-gray-200 cursor-pointer hover:bg-slate-50 transition">
+                            <input type="radio" name="q27" value="D" class="mt-0.5">
+                            <span><strong>D.</strong> Scientific inventions are more important than ever before.</span>
+                        </label>
+                    </div>
+                    <div id="exp-27" class="hidden mt-3 p-4 bg-emerald-50 rounded-xl border border-emerald-200 text-xs space-y-2">
+                        <div class="font-bold text-emerald-800">1. ĐÁP ÁN: A</div>
+                        <div><strong>2. ĐOẠN CHỨA ĐÁP ÁN:</strong> "Science plays an increasingly significant role in people's lives, making the faithful communication of scientific developments more important than ever." (Paragraph A)</div>
+                        <div><strong>3. DỊCH NGHĨA:</strong> Khoa học đóng vai trò ngày càng quan trọng trong cuộc sống con người, khiến việc truyền thông chính xác các phát triển khoa học trở nên quan trọng hơn bao giờ hết.</div>
+                        <div><strong>4. CỤM TỪ ĐỒNG NGHĨA:</strong> faithful communication = faithful communication; increasingly significant role = increasingly significant role.</div>
+                        <button onclick="locateParagraph('para-A', 'Science plays an increasingly significant role')" class="mt-2 text-xs font-bold text-indigo-700 hover:text-indigo-900 bg-indigo-100 hover:bg-indigo-200 px-3 py-1.5 rounded-lg border border-indigo-300 flex items-center gap-1.5 transition">
+                            <i class="fa-solid fa-arrow-pointer"></i> Locate Evidence in Paragraph A
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Q28 -->
+                <div id="q28-box" class="space-y-3 bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
+                    <p class="font-bold text-sm text-slate-900"><span class="text-indigo-600 font-black">28.</span> What is the reason for many of the biggest challenges in science reporting?</p>
+                    <div class="space-y-2 text-xs" id="q28-options">
+                        <label onclick="checkMCQ(28, 'A')" class="mcq-option flex items-start gap-2.5 p-3 rounded-xl border border-gray-200 cursor-pointer hover:bg-slate-50 transition">
+                            <input type="radio" name="q28" value="A" class="mt-0.5">
+                            <span><strong>A.</strong> Phenomenon such as global warming, cancer research, diet studies are too complex</span>
+                        </label>
+                        <label onclick="checkMCQ(28, 'B')" class="mcq-option flex items-start gap-2.5 p-3 rounded-xl border border-gray-200 cursor-pointer hover:bg-slate-50 transition">
+                            <input type="radio" name="q28" value="B" class="mt-0.5">
+                            <span><strong>B.</strong> Scientists themselves often only partly understand the Theory of Evolution</span>
+                        </label>
+                        <label onclick="checkMCQ(28, 'C')" class="mcq-option flex items-start gap-2.5 p-3 rounded-xl border border-gray-200 cursor-pointer hover:bg-slate-50 transition">
+                            <input type="radio" name="q28" value="C" class="mt-0.5">
+                            <span><strong>C.</strong> Scientists do not totally comprehend the impact of certain scientific advancements</span>
+                        </label>
+                        <label onclick="checkMCQ(28, 'D')" class="mcq-option flex items-start gap-2.5 p-3 rounded-xl border border-gray-200 cursor-pointer hover:bg-slate-50 transition">
+                            <input type="radio" name="q28" value="D" class="mt-0.5">
+                            <span><strong>D.</strong> Scientists themselves often partly understand the esoteric communication nature</span>
+                        </label>
+                    </div>
+                    <div id="exp-28" class="hidden mt-3 p-4 bg-emerald-50 rounded-xl border border-emerald-200 text-xs space-y-2">
+                        <div class="font-bold text-emerald-800">1. ĐÁP ÁN: C</div>
+                        <div><strong>2. ĐOẠN CHỨA ĐÁP ÁN:</strong> "...many of the biggest challenges for science reporting arise because in areas of evolving research, scientists themselves often only partly understand the full implications of any particular advance or development." (Paragraph B)</div>
+                        <div><strong>3. DỊCH NGHĨA:</strong> ...nhiều thách thức lớn nhất đối với báo cáo khoa học xuất hiện vì trong các lĩnh vực nghiên cứu đang phát triển, chính các nhà khoa học cũng thường chỉ hiểu một phần các hệ quả/tác động đầy đủ của bất kỳ sự tiến bộ nào.</div>
+                        <div><strong>4. CỤM TỪ ĐỒNG NGHĨA:</strong> do not totally comprehend = only partly understand; impact = full implications; scientific advancements = particular advance or development.</div>
+                        <button onclick="locateParagraph('para-B', 'scientists themselves often only partly understand')" class="mt-2 text-xs font-bold text-indigo-700 hover:text-indigo-900 bg-indigo-100 hover:bg-indigo-200 px-3 py-1.5 rounded-lg border border-indigo-300 flex items-center gap-1.5 transition">
+                            <i class="fa-solid fa-arrow-pointer"></i> Locate Evidence in Paragraph B
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Q29 -->
+                <div id="q29-box" class="space-y-3 bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
+                    <p class="font-bold text-sm text-slate-900"><span class="text-indigo-600 font-black">29.</span> According to the 3rd paragraph, the reference to the term and example of "theory of relativity" is to demonstrate</p>
+                    <div class="space-y-2 text-xs" id="q29-options">
+                        <label onclick="checkMCQ(29, 'A')" class="mcq-option flex items-start gap-2.5 p-3 rounded-xl border border-gray-200 cursor-pointer hover:bg-slate-50 transition">
+                            <input type="radio" name="q29" value="A" class="mt-0.5">
+                            <span><strong>A.</strong> Theory of relativity is about an invariant physical phenomenon</span>
+                        </label>
+                        <label onclick="checkMCQ(29, 'B')" class="mcq-option flex items-start gap-2.5 p-3 rounded-xl border border-gray-200 cursor-pointer hover:bg-slate-50 transition">
+                            <input type="radio" name="q29" value="B" class="mt-0.5">
+                            <span><strong>B.</strong> Scientific terms can sometimes cause misunderstandings</span>
+                        </label>
+                        <label onclick="checkMCQ(29, 'C')" class="mcq-option flex items-start gap-2.5 p-3 rounded-xl border border-gray-200 cursor-pointer hover:bg-slate-50 transition">
+                            <input type="radio" name="q29" value="C" class="mt-0.5">
+                            <span><strong>C.</strong> The term "relativity," is designed to be misleading public</span>
+                        </label>
+                        <label onclick="checkMCQ(29, 'D')" class="mcq-option flex items-start gap-2.5 p-3 rounded-xl border border-gray-200 cursor-pointer hover:bg-slate-50 transition">
+                            <input type="radio" name="q29" value="D" class="mt-0.5">
+                            <span><strong>D.</strong> Everything is relative and there is no absolute existence</span>
+                        </label>
+                    </div>
+                    <div id="exp-29" class="hidden mt-3 p-4 bg-emerald-50 rounded-xl border border-emerald-200 text-xs space-y-2">
+                        <div class="font-bold text-emerald-800">1. ĐÁP ÁN: B</div>
+                        <div><strong>2. ĐOẠN CHỨA ĐÁP ÁN:</strong> "Ambiguous word choices are the source of some misunderstandings... The term "relativity," for example, is intrinsically misleading." (Paragraph C)</div>
+                        <div><strong>3. DỊCH NGHĨA:</strong> Việc lựa chọn từ ngữ mơ hồ là nguồn gốc của một số hiểu lầm... Ví dụ, thuật ngữ "thuyết tương đối" về bản chất là gây hiểu lầm.</div>
+                        <div><strong>4. CỤM TỪ ĐỒNG NGHĨA:</strong> Scientific terms = word choices / term; cause misunderstandings = source of misunderstandings / intrinsically misleading.</div>
+                        <button onclick="locateParagraph('para-C', 'Ambiguous word choices are the source of some misunderstandings')" class="mt-2 text-xs font-bold text-indigo-700 hover:text-indigo-900 bg-indigo-100 hover:bg-indigo-200 px-3 py-1.5 rounded-lg border border-indigo-300 flex items-center gap-1.5 transition">
+                            <i class="fa-solid fa-arrow-pointer"></i> Locate Evidence in Paragraph C
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Q30 -->
+                <div id="q30-box" class="space-y-3 bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
+                    <p class="font-bold text-sm text-slate-900"><span class="text-indigo-600 font-black">30.</span> Which one is a good example of an area where scientists used appropriate terminology</p>
+                    <div class="space-y-2 text-xs" id="q30-options">
+                        <label onclick="checkMCQ(30, 'A')" class="mcq-option flex items-start gap-2.5 p-3 rounded-xl border border-gray-200 cursor-pointer hover:bg-slate-50 transition">
+                            <input type="radio" name="q30" value="A" class="mt-0.5">
+                            <span><strong>A.</strong> The uncertainty principle</span>
+                        </label>
+                        <label onclick="checkMCQ(30, 'B')" class="mcq-option flex items-start gap-2.5 p-3 rounded-xl border border-gray-200 cursor-pointer hover:bg-slate-50 transition">
+                            <input type="radio" name="q30" value="B" class="mt-0.5">
+                            <span><strong>B.</strong> Global warming</span>
+                        </label>
+                        <label onclick="checkMCQ(30, 'C')" class="mcq-option flex items-start gap-2.5 p-3 rounded-xl border border-gray-200 cursor-pointer hover:bg-slate-50 transition">
+                            <input type="radio" name="q30" value="C" class="mt-0.5">
+                            <span><strong>C.</strong> The theory of relativity</span>
+                        </label>
+                        <label onclick="checkMCQ(30, 'D')" class="mcq-option flex items-start gap-2.5 p-3 rounded-xl border border-gray-200 cursor-pointer hover:bg-slate-50 transition">
+                            <input type="radio" name="q30" value="D" class="mt-0.5">
+                            <span><strong>D.</strong> Freon's destructive process on Ozone</span>
+                        </label>
+                    </div>
+                    <div id="exp-30" class="hidden mt-3 p-4 bg-emerald-50 rounded-xl border border-emerald-200 text-xs space-y-2">
+                        <div class="font-bold text-emerald-800">1. ĐÁP ÁN: D</div>
+                        <div><strong>2. ĐOẠN CHỨA ĐÁP ÁN:</strong> "Science sometimes transcends this limitation: remarkably, chemists were able to detail the precise chemical processes involved in the destruction of the ozone layer, making the evidence that chlorofluorocarbon gases (Freon, for example) were destroying the ozone layer indisputably." (Paragraph F)</div>
+                        <div><strong>3. DỊCH NGHĨA:</strong> Khoa học đôi khi vượt qua hạn chế này: thật đáng kinh ngạc, các nhà hóa học đã có thể mô tả chi tiết các quá trình hóa học chính xác liên quan đến việc phá hủy tầng ozon...</div>
+                        <div><strong>4. CỤM TỪ ĐỒNG NGHĨA:</strong> appropriate terminology = detail the precise chemical processes indisputably. (Các lựa chọn A, B, C đều được đề cập là "problematic terminology" hoặc "abused term").</div>
+                        <button onclick="locateParagraph('para-F', 'chemists were able to detail the precise chemical processes')" class="mt-2 text-xs font-bold text-indigo-700 hover:text-indigo-900 bg-indigo-100 hover:bg-indigo-200 px-3 py-1.5 rounded-lg border border-indigo-300 flex items-center gap-1.5 transition">
+                            <i class="fa-solid fa-arrow-pointer"></i> Locate Evidence in Paragraph F
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Q31 -->
+                <div id="q31-box" class="space-y-3 bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
+                    <p class="font-bold text-sm text-slate-900"><span class="text-indigo-600 font-black">31.</span> What is a surprising finding of the Harvard debates in the passage?</p>
+                    <div class="space-y-2 text-xs" id="q31-options">
+                        <label onclick="checkMCQ(31, 'A')" class="mcq-option flex items-start gap-2.5 p-3 rounded-xl border border-gray-200 cursor-pointer hover:bg-slate-50 transition">
+                            <input type="radio" name="q31" value="A" class="mt-0.5">
+                            <span><strong>A.</strong> There are equal intrinsic scientific abilities of men and women.</span>
+                        </label>
+                        <label onclick="checkMCQ(31, 'B')" class="mcq-option flex items-start gap-2.5 p-3 rounded-xl border border-gray-200 cursor-pointer hover:bg-slate-50 transition">
+                            <input type="radio" name="q31" value="B" class="mt-0.5">
+                            <span><strong>B.</strong> Both sides used the same data in support of their argument.</span>
+                        </label>
+                        <label onclick="checkMCQ(31, 'C')" class="mcq-option flex items-start gap-2.5 p-3 rounded-xl border border-gray-200 cursor-pointer hover:bg-slate-50 transition">
+                            <input type="radio" name="q31" value="C" class="mt-0.5">
+                            <span><strong>C.</strong> The scientific data usually shows no substantial figures to support a debated idea.</span>
+                        </label>
+                        <label onclick="checkMCQ(31, 'D')" class="mcq-option flex items-start gap-2.5 p-3 rounded-xl border border-gray-200 cursor-pointer hover:bg-slate-50 transition">
+                            <input type="radio" name="q31" value="D" class="mt-0.5">
+                            <span><strong>D.</strong> Social factors might have a clear connection to scientific ability.</span>
+                        </label>
+                    </div>
+                    <div id="exp-31" class="hidden mt-3 p-4 bg-emerald-50 rounded-xl border border-emerald-200 text-xs space-y-2">
+                        <div class="font-bold text-emerald-800">1. ĐÁP ÁN: B</div>
+                        <div><strong>2. ĐOẠN CHỨA ĐÁP ÁN:</strong> "One of the more amusing aspects of the discussion was that those who believed in the differences and those who didn't used the same evidence about gender-specific special ability." (Paragraph G)</div>
+                        <div><strong>3. DỊCH NGHĨA:</strong> Một trong những khía cạnh thú vị (bất ngờ) hơn của cuộc thảo luận là cả những người tin vào sự khác biệt và những người không tin đều sử dụng cùng một bằng chứng về khả năng đặc biệt theo giới tính.</div>
+                        <div><strong>4. CỤM TỪ ĐỒNG NGHĨA:</strong> surprising finding = amusing aspect; both sides = those who believed... and those who didn't; used the same data = used the same evidence.</div>
+                        <button onclick="locateParagraph('para-G', 'those who believed in the differences and those who didn\'t used the same evidence')" class="mt-2 text-xs font-bold text-indigo-700 hover:text-indigo-900 bg-indigo-100 hover:bg-indigo-200 px-3 py-1.5 rounded-lg border border-indigo-300 flex items-center gap-1.5 transition">
+                            <i class="fa-solid fa-arrow-pointer"></i> Locate Evidence in Paragraph G
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- SECTION 2: QUESTIONS 32-35 (YES / NO / NOT GIVEN) -->
+            <div class="bg-slate-50 p-6 rounded-2xl border border-gray-200 space-y-6">
+                <div class="border-b border-gray-200 pb-3">
+                    <h3 class="font-black text-base text-slate-900">Questions 32–35</h3>
+                    <p class="text-xs font-semibold text-slate-600">Choose YES if the statement agrees with the claims of the writer, choose NO if the statement contradicts the claims of the writer, or NOT GIVEN if it is impossible to say what the writer thinks about this.</p>
+                </div>
+
+                <!-- Q32 -->
+                <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm space-y-3">
+                    <p class="font-bold text-sm text-slate-900"><span class="text-indigo-600 font-black">32.</span> "Global warming" scientifically refers to greater fluctuations in temperature and rainfall rather than a universal temperature rise.</p>
+                    <div class="flex items-center gap-3">
+                        <select id="q32" onchange="updateProgress()" class="bg-slate-100 border border-gray-300 font-bold text-xs rounded-xl p-2.5 focus:ring-2 focus:ring-indigo-500 outline-none">
+                            <option value="">-- Chọn đáp án --</option>
+                            <option value="YES">YES</option>
+                            <option value="NO">NO</option>
+                            <option value="NOT GIVEN">NOT GIVEN</option>
+                        </select>
+                    </div>
+                    <div id="exp-32" class="hidden mt-3 p-4 bg-emerald-50 rounded-xl border border-emerald-200 text-xs space-y-2">
+                        <div class="font-bold text-emerald-800">1. ĐÁP ÁN: YES</div>
+                        <div><strong>2. ĐOẠN CHỨA ĐÁP ÁN:</strong> "Climatologists predict more drastic fluctuations in temperature and rainfall — not necessarily that every place will be warmer." (Paragraph F)</div>
+                        <div><strong>3. DỊCH NGHĨA:</strong> Các nhà khí hậu học dự đoán sự biến động mạnh mẽ hơn về nhiệt độ và lượng mưa — không nhất thiết là mọi nơi đều sẽ nóng hơn.</div>
+                        <div><strong>4. CỤM TỪ ĐỒNG NGHĨA:</strong> greater fluctuations = more drastic fluctuations; universal temperature rise = every place will be warmer.</div>
+                        <button onclick="locateParagraph('para-F', 'Climatologists predict more drastic fluctuations in temperature and rainfall')" class="mt-2 text-xs font-bold text-indigo-700 hover:text-indigo-900 bg-indigo-100 hover:bg-indigo-200 px-3 py-1.5 rounded-lg border border-indigo-300 flex items-center gap-1.5 transition">
+                            <i class="fa-solid fa-arrow-pointer"></i> Locate Evidence in Paragraph F
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Q33 -->
+                <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm space-y-3">
+                    <p class="font-bold text-sm text-slate-900"><span class="text-indigo-600 font-black">33.</span> More media coverage of "global warming" would help the public to recognize the phenomenon.</p>
+                    <div class="flex items-center gap-3">
+                        <select id="q33" onchange="updateProgress()" class="bg-slate-100 border border-gray-300 font-bold text-xs rounded-xl p-2.5 focus:ring-2 focus:ring-indigo-500 outline-none">
+                            <option value="">-- Chọn đáp án --</option>
+                            <option value="YES">YES</option>
+                            <option value="NO">NO</option>
+                            <option value="NOT GIVEN">NOT GIVEN</option>
+                        </select>
+                    </div>
+                    <div id="exp-33" class="hidden mt-3 p-4 bg-emerald-50 rounded-xl border border-emerald-200 text-xs space-y-2">
+                        <div class="font-bold text-emerald-800">1. ĐÁP ÁN: NOT GIVEN</div>
+                        <div><strong>2. ĐOẠN CHỨA ĐÁP ÁN:</strong> Paragraph F bàn về thuật ngữ "Global warming" gây tranh cãi và gợi ý nên đổi thành "global climate change", nhưng KHÔNG hề đề cập đến việc "nhiều truyền thông/báo chí hơn sẽ giúp công chúng nhận thức rõ hơn".</div>
+                        <div><strong>3. DỊCH NGHĨA:</strong> Không có thông tin trong bài về tác động của media coverage.</div>
+                        <div><strong>4. CỤM TỪ ĐỒNG NGHĨA:</strong> N/A (Thông tin không có trong bài đọc).</div>
+                        <button onclick="locateParagraph('para-F', 'Global warming is another example of problematic terminology')" class="mt-2 text-xs font-bold text-indigo-700 hover:text-indigo-900 bg-indigo-100 hover:bg-indigo-200 px-3 py-1.5 rounded-lg border border-indigo-300 flex items-center gap-1.5 transition">
+                            <i class="fa-solid fa-arrow-pointer"></i> Locate Evidence in Paragraph F
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Q34 -->
+                <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm space-y-3">
+                    <p class="font-bold text-sm text-slate-900"><span class="text-indigo-600 font-black">34.</span> Harvard debates should focus more on female scientists than male scientists.</p>
+                    <div class="flex items-center gap-3">
+                        <select id="q34" onchange="updateProgress()" class="bg-slate-100 border border-gray-300 font-bold text-xs rounded-xl p-2.5 focus:ring-2 focus:ring-indigo-500 outline-none">
+                            <option value="">-- Chọn đáp án --</option>
+                            <option value="YES">YES</option>
+                            <option value="NO">NO</option>
+                            <option value="NOT GIVEN">NOT GIVEN</option>
+                        </select>
+                    </div>
+                    <div id="exp-34" class="hidden mt-3 p-4 bg-emerald-50 rounded-xl border border-emerald-200 text-xs space-y-2">
+                        <div class="font-bold text-emerald-800">1. ĐÁP ÁN: NOT GIVEN</div>
+                        <div><strong>2. ĐOẠN CHỨA ĐÁP ÁN:</strong> Paragraph G nói về cuộc tranh luận tại Harvard về khả năng khoa học giữa nam và nữ, và kết luận dữ liệu không cho thấy khác biệt lớn. Tác giả KHÔNG đưa ra ý kiến rằng các cuộc tranh luận nên tập trung hơn vào nhà khoa học nữ.</div>
+                        <div><strong>3. DỊCH NGHĨA:</strong> Không có thông tin tác giả đưa ra lời khuyên này.</div>
+                        <div><strong>4. CỤM TỪ ĐỒNG NGHĨA:</strong> N/A.</div>
+                        <button onclick="locateParagraph('para-G', 'Harvard was tortured by empty debates')" class="mt-2 text-xs font-bold text-indigo-700 hover:text-indigo-900 bg-indigo-100 hover:bg-indigo-200 px-3 py-1.5 rounded-lg border border-indigo-300 flex items-center gap-1.5 transition">
+                            <i class="fa-solid fa-arrow-pointer"></i> Locate Evidence in Paragraph G
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Q35 -->
+                <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm space-y-3">
+                    <p class="font-bold text-sm text-slate-900"><span class="text-indigo-600 font-black">35.</span> Indirect scientific evidence is always less reliable than direct scientific evidence.</p>
+                    <div class="flex items-center gap-3">
+                        <select id="q35" onchange="updateProgress()" class="bg-slate-100 border border-gray-300 font-bold text-xs rounded-xl p-2.5 focus:ring-2 focus:ring-indigo-500 outline-none">
+                            <option value="">-- Chọn đáp án --</option>
+                            <option value="YES">YES</option>
+                            <option value="NO">NO</option>
+                            <option value="NOT GIVEN">NOT GIVEN</option>
+                        </select>
+                    </div>
+                    <div id="exp-35" class="hidden mt-3 p-4 bg-emerald-50 rounded-xl border border-emerald-200 text-xs space-y-2">
+                        <div class="font-bold text-emerald-800">1. ĐÁP ÁN: NO</div>
+                        <div><strong>2. ĐOẠN CHỨA ĐÁP ÁN:</strong> "The information from an unmanned space mission is no less legitimate than the information from one in which people are on board." (Paragraph G)</div>
+                        <div><strong>3. DỊCH NGHĨA:</strong> Thông tin từ một sứ mệnh vũ trụ không người lái (bằng chứng gián tiếp) không kém phần hợp pháp/đáng tin cậy so với thông tin từ một sứ mệnh có con người trên tàu (bằng chứng trực tiếp).</div>
+                        <div><strong>4. CỤM TỪ ĐỒNG NGHĨA:</strong> is always less reliable (trái ngược với) no less legitimate.</div>
+                        <button onclick="locateParagraph('para-G', 'unmanned space mission is no less legitimate')" class="mt-2 text-xs font-bold text-indigo-700 hover:text-indigo-900 bg-indigo-100 hover:bg-indigo-200 px-3 py-1.5 rounded-lg border border-indigo-300 flex items-center gap-1.5 transition">
+                            <i class="fa-solid fa-arrow-pointer"></i> Locate Evidence in Paragraph G
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- SECTION 3: QUESTIONS 36-40 (SUMMARY COMPLETION) -->
+            <div class="bg-slate-50 p-6 rounded-2xl border border-gray-200 space-y-6">
+                <div class="border-b border-gray-200 pb-3">
+                    <h3 class="font-black text-base text-slate-900">Questions 36–40</h3>
+                    <p class="text-xs font-semibold text-slate-600">Complete the summary below. Write <strong>NO MORE THAN TWO WORDS</strong> from the passage for each answer.</p>
+                </div>
+
+                <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm text-sm leading-relaxed text-slate-800 space-y-4">
+                    <p>
+                        Science Communication is fraught with challenges that can easily distort discussions, leading to unnecessary confusion and misunderstandings. Firstly, ambiguous 
+                        <span class="inline-block px-1">
+                            <input type="text" id="q36" oninput="updateProgress()" placeholder="36" class="w-36 px-2 py-1 bg-slate-100 border border-gray-300 rounded-lg text-xs font-bold text-indigo-700 focus:ring-2 focus:ring-indigo-500 outline-none">
+                        </span> 
+                        are the source of some misunderstandings. Common people without proper training do not understand clearly or deeply a specific scientific meaning via the 
+                        <span class="inline-block px-1">
+                            <input type="text" id="q37" oninput="updateProgress()" placeholder="37" class="w-36 px-2 py-1 bg-slate-100 border border-gray-300 rounded-lg text-xs font-bold text-indigo-700 focus:ring-2 focus:ring-indigo-500 outline-none">
+                        </span> 
+                        that scientists often employ. For example, uncertainty is not about 
+                        <span class="inline-block px-1">
+                            <input type="text" id="q38" oninput="updateProgress()" placeholder="38" class="w-36 px-2 py-1 bg-slate-100 border border-gray-300 rounded-lg text-xs font-bold text-indigo-700 focus:ring-2 focus:ring-indigo-500 outline-none">
+                        </span> 
+                        limitations on any particular 
+                        <span class="inline-block px-1">
+                            <input type="text" id="q39" oninput="updateProgress()" placeholder="39" class="w-36 px-2 py-1 bg-slate-100 border border-gray-300 rounded-lg text-xs font-bold text-indigo-700 focus:ring-2 focus:ring-indigo-500 outline-none">
+                        </span> 
+                        . What's more, even the word "theory" can be a problem. Theories aren't necessarily shown to be correct or complete immediately since scientists often evolved better versions of specific theories, a good example can be the theory of 
+                        <span class="inline-block px-1">
+                            <input type="text" id="q40" oninput="updateProgress()" placeholder="40" class="w-40 px-2 py-1 bg-slate-100 border border-gray-300 rounded-lg text-xs font-bold text-indigo-700 focus:ring-2 focus:ring-indigo-500 outline-none">
+                        </span> 
+                        . Thus, most importantly people have to recognize that science can be complex.
+                    </p>
+                </div>
+
+                <!-- Explanations 36-40 -->
+                <div class="space-y-3">
+                    <!-- Q36 Exp -->
+                    <div id="exp-36" class="hidden p-4 bg-emerald-50 rounded-xl border border-emerald-200 text-xs space-y-2">
+                        <div class="font-bold text-emerald-800">1. ĐÁP ÁN Q36: word choices</div>
+                        <div><strong>2. ĐOẠN CHỨA ĐÁP ÁN:</strong> "Ambiguous word choices are the source of some misunderstandings." (Paragraph C)</div>
+                        <div><strong>3. DỊCH NGHĨA:</strong> Việc lựa chọn từ ngữ mơ hồ là nguồn gốc của một số hiểu lầm.</div>
+                        <div><strong>4. CỤM TỪ ĐỒNG NGHĨA:</strong> ambiguous word choices = ambiguous word choices.</div>
+                        <button onclick="locateParagraph('para-C', 'Ambiguous word choices are the source of some misunderstandings')" class="mt-2 text-xs font-bold text-indigo-700 hover:text-indigo-900 bg-indigo-100 hover:bg-indigo-200 px-3 py-1.5 rounded-lg border border-indigo-300 flex items-center gap-1.5 transition">
+                            <i class="fa-solid fa-arrow-pointer"></i> Locate Evidence in Paragraph C
+                        </button>
+                    </div>
+
+                    <!-- Q37 Exp -->
+                    <div id="exp-37" class="hidden p-4 bg-emerald-50 rounded-xl border border-emerald-200 text-xs space-y-2">
+                        <div class="font-bold text-emerald-800">1. ĐÁP ÁN Q37: colloquial terminology</div>
+                        <div><strong>2. ĐOẠN CHỨA ĐÁP ÁN:</strong> "Scientists often employ colloquial terminology, which they then assign a specific meaning that is impossible to fathom without proper training." (Paragraph C)</div>
+                        <div><strong>3. DỊCH NGHĨA:</strong> Các nhà khoa học thường sử dụng thuật ngữ thông dụng, sau đó gán cho nó một ý nghĩa cụ thể mà người không có đào tạo không thể hiểu được.</div>
+                        <div><strong>4. CỤM TỪ ĐỒNG NGHĨA:</strong> common people without proper training = without proper training; employ = employ.</div>
+                        <button onclick="locateParagraph('para-C', 'Scientists often employ colloquial terminology')" class="mt-2 text-xs font-bold text-indigo-700 hover:text-indigo-900 bg-indigo-100 hover:bg-indigo-200 px-3 py-1.5 rounded-lg border border-indigo-300 flex items-center gap-1.5 transition">
+                            <i class="fa-solid fa-arrow-pointer"></i> Locate Evidence in Paragraph C
+                        </button>
+                    </div>
+
+                    <!-- Q38 Exp -->
+                    <div id="exp-38" class="hidden p-4 bg-emerald-50 rounded-xl border border-emerald-200 text-xs space-y-2">
+                        <div class="font-bold text-emerald-800">1. ĐÁP ÁN Q38: intrinsic</div>
+                        <div><strong>2. ĐOẠN CHỨA ĐÁP ÁN:</strong> "But it is not about intrinsic limitations on any one particular measurement..." (Paragraph D)</div>
+                        <div><strong>3. DỊCH NGHĨA:</strong> Nhưng nó không phải là về những hạn chế nội tại đối với bất kỳ một phép đo cụ thể nào...</div>
+                        <div><strong>4. CỤM TỪ ĐỒNG NGHĨA:</strong> intrinsic limitations = intrinsic limitations.</div>
+                        <button onclick="locateParagraph('para-D', 'intrinsic limitations on any one particular measurement')" class="mt-2 text-xs font-bold text-indigo-700 hover:text-indigo-900 bg-indigo-100 hover:bg-indigo-200 px-3 py-1.5 rounded-lg border border-indigo-300 flex items-center gap-1.5 transition">
+                            <i class="fa-solid fa-arrow-pointer"></i> Locate Evidence in Paragraph D
+                        </button>
+                    </div>
+
+                    <!-- Q39 Exp -->
+                    <div id="exp-39" class="hidden p-4 bg-emerald-50 rounded-xl border border-emerald-200 text-xs space-y-2">
+                        <div class="font-bold text-emerald-800">1. ĐÁP ÁN Q39: measurement</div>
+                        <div><strong>2. ĐOẠN CHỨA ĐÁP ÁN:</strong> "But it is not about intrinsic limitations on any one particular measurement..." (Paragraph D)</div>
+                        <div><strong>3. DỊCH NGHĨA:</strong> Nhưng nó không phải là về những hạn chế nội tại đối với bất kỳ một phép đo cụ thể nào...</div>
+                        <div><strong>4. CỤM TỪ ĐỒNG NGHĨA:</strong> particular measurement = particular measurement.</div>
+                        <button onclick="locateParagraph('para-D', 'intrinsic limitations on any one particular measurement')" class="mt-2 text-xs font-bold text-indigo-700 hover:text-indigo-900 bg-indigo-100 hover:bg-indigo-200 px-3 py-1.5 rounded-lg border border-indigo-300 flex items-center gap-1.5 transition">
+                            <i class="fa-solid fa-arrow-pointer"></i> Locate Evidence in Paragraph D
+                        </button>
+                    </div>
+
+                    <!-- Q40 Exp -->
+                    <div id="exp-40" class="hidden p-4 bg-emerald-50 rounded-xl border border-emerald-200 text-xs space-y-2">
+                        <div class="font-bold text-emerald-800">1. ĐÁP ÁN Q40: general relativity</div>
+                        <div><strong>2. ĐOẠN CHỨA ĐÁP ÁN:</strong> "Even Einstein took the better part of a decade to develop the correct version of his theory of general relativity." (Paragraph E)</div>
+                        <div><strong>3. DỊCH NGHĨA:</strong> Ngay cả Einstein cũng mất gần mười năm để phát triển phiên bản chính xác của thuyết tương đối tổng quát của mình.</div>
+                        <div><strong>4. CỤM TỪ ĐỒNG NGHĨA:</strong> evolved better versions = develop the correct version; theory of general relativity.</div>
+                        <button onclick="locateParagraph('para-E', 'theory of general relativity')" class="mt-2 text-xs font-bold text-indigo-700 hover:text-indigo-900 bg-indigo-100 hover:bg-indigo-200 px-3 py-1.5 rounded-lg border border-indigo-300 flex items-center gap-1.5 transition">
+                            <i class="fa-solid fa-arrow-pointer"></i> Locate Evidence in Paragraph E
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- RESULT & IELTS BAND SCORE MODAL -->
+    <div id="result-modal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
+        <div class="bg-white rounded-3xl max-w-lg w-full p-6 md:p-8 space-y-6 shadow-2xl transform transition-all scale-95 border border-gray-100">
+            <div class="text-center space-y-2">
+                <div class="inline-flex p-3 bg-indigo-100 text-indigo-600 rounded-full mb-1">
+                    <i class="fa-solid fa-trophy text-3xl"></i>
+                </div>
+                <h3 class="text-2xl font-black text-slate-900">KẾT QUẢ BÀI THI IELTS READING</h3>
+                <p class="text-xs text-slate-500">Giáo viên: Ms Lê Hằng English - Hotline/Zalo: 0584 965 348</p>
+            </div>
+
+            <!-- Score Display Grid -->
+            <div class="grid grid-cols-2 gap-4 text-center">
+                <div class="bg-slate-50 p-4 rounded-2xl border border-gray-200">
+                    <span class="text-xs font-bold text-slate-500 uppercase">Số câu đúng</span>
+                    <div id="modal-score" class="text-3xl font-black text-indigo-600 mt-1">0/14</div>
+                </div>
+                <div class="bg-indigo-600 p-4 rounded-2xl text-white shadow-lg shadow-indigo-200">
+                    <span class="text-xs font-bold text-indigo-200 uppercase">IELTS Band Dự Kiến</span>
+                    <div id="modal-band" class="text-3xl font-black mt-1">0.0</div>
+                </div>
+            </div>
+
+            <!-- Detailed Feedback -->
+            <div class="bg-amber-50 p-4 rounded-2xl border border-amber-200 text-xs text-amber-900 space-y-1.5">
+                <div class="font-bold text-sm flex items-center gap-1.5">
+                    <i class="fa-solid fa-star text-amber-500"></i>
+                    <span>Nhận xét chuyên môn:</span>
+                </div>
+                <p id="modal-feedback" class="italic leading-relaxed">Đang tính toán kết quả...</p>
+            </div>
+
+            <!-- Actions -->
+            <div class="flex gap-3">
+                <button onclick="closeModal()" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-sm py-3 rounded-xl transition btn-3d">
+                    Xem Chi Tiết Lời Giải
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- AUDIO & JAVASCRIPT LOGIC -->
+    <script>
+        // --- 1. DATA OBJECTS ---
+        const correctAnswers = {
+            27: 'A',
+            28: 'C',
+            29: 'B',
+            30: 'D',
+            31: 'B',
+            32: 'YES',
+            33: 'NOT GIVEN',
+            34: 'NOT GIVEN',
+            35: 'NO',
+            36: 'word choices',
+            37: 'colloquial terminology',
+            38: 'intrinsic',
+            39: 'measurement',
+            40: 'general relativity'
+        };
+
+        const glossaryData = [
+            { word: "Esoteric", type: "adj", mean: "Thâm thúy, chuyên sâu, khó hiểu đối với người thường", synonym: "Abstruse, obscure" },
+            { word: "Terminology", type: "noun", mean: "Thuật ngữ chuyên ngành", synonym: "Jargon, nomenclature" },
+            { word: "Abstraction", type: "noun", mean: "Sự trừu tượng hóa", synonym: "Conceptualization" },
+            { word: "Ingenuity", type: "noun", mean: "Trí thông minh, tài khéo léo", synonym: "Inventiveness, cleverness" },
+            { word: "Implication", type: "noun", mean: "Hệ quả, tác động, ẩn ý", synonym: "Consequence, ramification" },
+            { word: "Spur", type: "verb", mean: "Thúc đẩy, khuyến khích", synonym: "Encourage, stimulate" },
+            { word: "Ambiguous", type: "adj", mean: "Mơ hồ, không rõ ràng", synonym: "Vague, equivocal" },
+            { word: "Colloquial", type: "adj", mean: "Thông dụng, khẩu ngữ", synonym: "Informal, conversational" },
+            { word: "Fathom", type: "verb", mean: "Hiểu thấu, tìm hiểu kỹ", synonym: "Comprehend, understand" },
+            { word: "Intrinsically", type: "adv", mean: "Về bản chất, thực chất", synonym: "Inherently, fundamentally" },
+            { word: "Invariant", type: "adj", mean: "Bất biến, không thay đổi", synonym: "Unchanging, constant" },
+            { word: "Transcends", type: "verb", mean: "Vượt lên trên, vượt quá", synonym: "Surpasses, exceeds" },
+            { word: "Entrenched", type: "adj", mean: "Cắm rễ sâu, cố định khó thay đổi", synonym: "Established, ingrained" },
+            { word: "Abused", type: "adj/verb", mean: "Bị lạm dụng", synonym: "Misused, exploited" },
+            { word: "Simultaneously", type: "adv", mean: "Đồng thời, cùng một lúc", synonym: "Concurrently, together" },
+            { word: "Passing conjecture", type: "noun phrase", mean: "Giả đoán thoáng qua", synonym: "Guesswork, speculation" },
+            { word: "Suspect", type: "adj", mean: "Đáng ngờ", synonym: "Doubtful, dubious" },
+            { word: "Entail", type: "verb", mean: "Đòi hỏi, kéo theo", synonym: "Involve, require" },
+            { word: "Embodied", type: "adj/verb", mean: "Thực thể hóa, bao hàm", synonym: "Expressed, incorporated" },
+            { word: "Borne out", type: "phrasal verb", mean: "Được chứng minh, xác nhận", synonym: "Confirmed, substantiated" },
+            { word: "Encompassing", type: "adj", mean: "Bao quát, toàn diện", synonym: "Comprehensive, wide-ranging" },
+            { word: "Fluctuations", type: "noun", mean: "Sự biến động, dao động", synonym: "Variations, oscillations" },
+            { word: "Subverts", type: "verb", mean: "Làm suy yếu, lật đổ", synonym: "Undermines, weakens" },
+            { word: "Indisputably", type: "adv", mean: "Không thể chối cãi", synonym: "Undeniably, incontestably" },
+            { word: "Inculcate", type: "verb", mean: "Khắc ghi, ghi nhớ", synonym: "Instill, engrain" },
+            { word: "Legitimate", type: "adj", mean: "Hợp pháp, chính đáng, đáng tin", synonym: "Valid, authentic" },
+            { word: "Equating", type: "verb", mean: "Đánh đồng", synonym: "Comparing, identifying" },
+            { word: "Urgent", type: "adj", mean: "Khẩn cấp, cấp thiết", synonym: "Pressing, critical" },
+            { word: "Substantial", type: "adj", mean: "Đáng kể, quan trọng", synonym: "Significant, considerable" },
+            { word: "Distorted", type: "adj", mean: "Bị bóp méo, méo mó", synonym: "Misrepresented, falsified" },
+            { word: "Subtle", type: "adj", mean: "Tinh vi, tế nhị", synonym: "Delicate, nuanced" },
+            { word: "Faithful", type: "adj", mean: "Chính xác, trung thực", synonym: "Accurate, precise" },
+            { word: "Fraught with", type: "adj phrase", mean: "Đầy truyền tải khó khăn/rủi ro", synonym: "Filled with, laden with" },
+            { word: "Distort", type: "verb", mean: "Làm bóp méo", synonym: "Twist, warp" },
+            { word: "Dynamic", type: "noun", mean: "Động lực, sự tương tác", synonym: "Force, mechanics" },
+            { word: "Coordinates", type: "noun", mean: "Tọa độ", synonym: "Reference points" },
+            { word: "Reference frame", type: "noun phrase", mean: "Hệ quy chiếu", synonym: "Context, setup" },
+            { word: "Uncertainty", type: "noun", mean: "Độ bất định, sự không chắc chắn", synonym: "Doubt, ambiguity" },
+            { word: "Conjecture", type: "noun", mean: "Giả đoán", synonym: "Hypothesis" },
+            { word: "Drastic", type: "adj", mean: "Mạnh mẽ, quyết liệt", synonym: "Extreme, severe" },
+            { word: "Indisputable", type: "adj", mean: "Không thể tranh cãi", synonym: "Certain" },
+            { word: "Tortured", type: "verb", mean: "Bị dằn dằn, quấy rầy", synonym: "Disturbed, troubled" },
+            { word: "Amusing", type: "adj", mean: "Vui nhộn, thú vị", synonym: "Entertaining, humorous" },
+            { word: "Intrinsic", type: "adj", mean: "Nội tại, bản chất", synonym: "Inherent, essential" },
+            { word: "Blind belief", type: "noun phrase", mean: "Niềm tin mù quáng", synonym: "Blind faith" },
+            { word: "Evaluation", type: "noun", mean: "Sự đánh giá", synonym: "Assessment, appraisal" },
+            { word: "Progress", type: "noun", mean: "Tiến trình, sự tiến bộ", synonym: "Development, headway" },
+            { word: "Ozone layer", type: "noun phrase", mean: "Tầng ozon", synonym: "Atmospheric layer" },
+            { word: "Climatologist", type: "noun", mean: "Nhà khí hậu học", synonym: "Climate scientist" },
+            { word: "Chlorofluorocarbon", type: "noun", mean: "Khí CFC (Freon)", synonym: "Refrigerant gas" }
+        ];
+
+        // --- 2. AUDIO SYNTHESIZER (WEB AUDIO API) ---
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+        function playSound(type) {
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+            if (type === 'correct') {
+                // Happy "Ding" Sound
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(523.25, audioCtx.currentTime); // C5
+                osc.frequency.exponentialRampToValueAtTime(659.25, audioCtx.currentTime + 0.1); // E5
+                osc.frequency.exponentialRampToValueAtTime(783.99, audioCtx.currentTime + 0.2); // G5
+                gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.5);
+            } else if (type === 'wrong') {
+                // Sad "Téo tèo tèo" Sound
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(220, audioCtx.currentTime); // A3
+                osc.frequency.exponentialRampToValueAtTime(180, audioCtx.currentTime + 0.2);
+                osc.frequency.exponentialRampToValueAtTime(140, audioCtx.currentTime + 0.4);
+                gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.5);
+            }
+        }
+
+        // --- 3. TIMER LOGIC ---
+        let timerSeconds = 1200; // 20 minutes
+        let timerInterval = null;
+        let timerRunning = false;
+
+        function updateTimerDisplay() {
+            const mins = Math.floor(timerSeconds / 60);
+            const secs = timerSeconds % 60;
+            document.getElementById('timer-display').innerText = 
+                `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        function toggleTimer() {
+            const btnText = document.getElementById('timer-btn-text');
+            const icon = document.getElementById('timer-icon');
+
+            if (!timerRunning) {
+                timerRunning = true;
+                btnText.innerText = 'TẠM DỪNG';
+                icon.className = 'fa-solid fa-pause';
+                timerInterval = setInterval(() => {
+                    if (timerSeconds > 0) {
+                        timerSeconds--;
+                        updateTimerDisplay();
+                    } else {
+                        clearInterval(timerInterval);
+                        timerRunning = false;
+                        alert('⏰ Đã hết giờ làm bài, vui lòng nộp bài nhé!');
+                        disableAllInputs();
+                    }
+                }, 1000);
+            } else {
+                timerRunning = false;
+                clearInterval(timerInterval);
+                btnText.innerText = 'TIẾP TỤC';
+                icon.className = 'fa-solid fa-play';
+            }
+        }
+
+        function disableAllInputs() {
+            document.querySelectorAll('input, select, button:not(#btn-timer-toggle)').forEach(el => {
+                if(el.id !== 'btn-timer-toggle') el.disabled = true;
+            });
+        }
+
+        // --- 4. TRANSLATION TOGGLE ---
+        function toggleTranslation(id) {
+            const el = document.getElementById(id);
+            if (el.classList.contains('hidden')) {
+                el.classList.remove('hidden');
+            } else {
+                el.classList.add('hidden');
+            }
+        }
+
+        // --- 5. MCQ CHECK & SOUND & CONFETTI ---
+        function checkMCQ(qNum, selectedValue) {
+            const isCorrect = selectedValue === correctAnswers[qNum];
+            const optionsContainer = document.getElementById(`q${qNum}-options`);
+            const labels = optionsContainer.querySelectorAll('label');
+
+            labels.forEach(label => {
+                const input = label.querySelector('input');
+                if (input.value === selectedValue) {
+                    if (isCorrect) {
+                        label.className = "mcq-option flex items-start gap-2.5 p-3 rounded-xl border-2 border-emerald-500 bg-emerald-50 text-emerald-900 font-bold transition";
+                    } else {
+                        label.className = "mcq-option flex items-start gap-2.5 p-3 rounded-xl border-2 border-rose-400 bg-rose-50 text-rose-900 font-bold transition";
+                    }
+                } else if (input.value === correctAnswers[qNum]) {
+                    label.className = "mcq-option flex items-start gap-2.5 p-3 rounded-xl border border-emerald-300 bg-emerald-50/50 text-emerald-800 transition";
+                } else {
+                    label.className = "mcq-option flex items-start gap-2.5 p-3 rounded-xl border border-gray-200 opacity-60 transition";
+                }
+            });
+
+            if (isCorrect) {
+                playSound('correct');
+                confetti({
+                    particleCount: 50,
+                    spread: 60,
+                    origin: { y: 0.7 }
+                });
+            } else {
+                playSound('wrong');
+            }
+
+            updateProgress();
+        }
+
+        // --- 6. LOCATE EVIDENCE ---
+        function locateParagraph(paraId, textSubstring) {
+            const leftPanel = document.getElementById('left-panel');
+            const targetPara = document.getElementById(paraId);
+
+            if (targetPara) {
+                // Scroll into view within left panel
+                targetPara.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                
+                // Add highlight class
+                targetPara.classList.add('highlight-evidence');
+                setTimeout(() => {
+                    targetPara.classList.remove('highlight-evidence');
+                }, 3000);
+            }
+        }
+
+        // --- 7. PROGRESS TRACKER ---
+        function updateProgress() {
+            let answered = 0;
+            // Check 27-31
+            [27, 28, 29, 30, 31].forEach(q => {
+                const selected = document.querySelector(`input[name="q${q}"]:checked`);
+                if (selected) answered++;
+            });
+
+            // Check 32-35
+            [32, 33, 34, 35].forEach(q => {
+                const val = document.getElementById(`q${q}`).value;
+                if (val !== "") answered++;
+            });
+
+            // Check 36-40
+            [36, 37, 38, 39, 40].forEach(q => {
+                const val = document.getElementById(`q${q}`).value.trim();
+                if (val !== "") answered++;
+            });
+
+            document.getElementById('progress-text').innerText = `${answered}/14`;
+            document.getElementById('progress-bar').style.width = `${(answered / 14) * 100}%`;
+        }
+
+        // --- 8. SUBMIT TEST & BAND SCORE CALCULATION ---
+        function submitTest() {
+            let score = 0;
+
+            // Check 27-31
+            [27, 28, 29, 30, 31].forEach(q => {
+                const selected = document.querySelector(`input[name="q${q}"]:checked`);
+                if (selected && selected.value === correctAnswers[q]) {
+                    score++;
+                }
+                document.getElementById(`exp-${q}`).classList.remove('hidden');
+            });
+
+            // Check 32-35
+            [32, 33, 34, 35].forEach(q => {
+                const val = document.getElementById(`q${q}`).value;
+                const selectEl = document.getElementById(`q${q}`);
+                if (val === correctAnswers[q]) {
+                    score++;
+                    selectEl.className = "bg-emerald-100 border-2 border-emerald-500 font-bold text-xs rounded-xl p-2.5 text-emerald-900";
+                } else {
+                    selectEl.className = "bg-rose-100 border-2 border-rose-500 font-bold text-xs rounded-xl p-2.5 text-rose-900";
+                }
+                document.getElementById(`exp-${q}`).classList.remove('hidden');
+            });
+
+            // Check 36-40
+            [36, 37, 38, 39, 40].forEach(q => {
+                const val = document.getElementById(`q${q}`).value.trim().toLowerCase();
+                const inputEl = document.getElementById(`q${q}`);
+                if (val === correctAnswers[q].toLowerCase()) {
+                    score++;
+                    inputEl.className = "w-36 px-2 py-1 bg-emerald-100 border-2 border-emerald-500 rounded-lg text-xs font-bold text-emerald-900";
+                } else {
+                    inputEl.className = "w-36 px-2 py-1 bg-rose-100 border-2 border-rose-500 rounded-lg text-xs font-bold text-rose-900";
+                }
+                document.getElementById(`exp-${q}`).classList.remove('hidden');
+            });
+
+            // Calculate Band Score scaled to full IELTS Academic scale (14 questions mapped to 40)
+            const scaledScore = Math.round((score / 14) * 40);
+            let band = "2.5";
+            let feedback = "Cần cố gắng học thêm nhiều từ vựng và luyện tập lại em nhé!";
+
+            if (scaledScore >= 39) { band = "9.0"; feedback = "Xuất sắc tuyệt đối! Kỹ năng Reading của em đạt trình độ thạo như người bản xứ!"; }
+            else if (scaledScore >= 37) { band = "8.5"; feedback = "Rất tuyệt vời! Em làm bài xuất sắc, giữ vững phong độ nhé!"; }
+            else if (scaledScore >= 35) { band = "8.0"; feedback = "Kết quả tuyệt vời! Kỹ năng xử lý thông tin rất nhạy bén."; }
+            else if (scaledScore >= 33) { band = "7.5"; feedback = "Làm bài rất tốt! Cần chú ý thêm một số bẫy từ vựng nhỏ."; }
+            else if (scaledScore >= 30) { band = "7.0"; feedback = "Đạt Band 7.0 cứng cáp! Tiếp tục phát huy thế mạnh."; }
+            else if (scaledScore >= 27) { band = "6.5"; feedback = "Khá tốt! Đã nắm được tư duy paraphrase cơ bản."; }
+            else if (scaledScore >= 23) { band = "6.0"; feedback = "Đạt mức Khá. Hãy chú ý đọc kĩ đoạn văn chứa keyword."; }
+            else if (scaledScore >= 20) { band = "5.5"; feedback = "Cố gắng hơn nữa nhé! Ôn lại bảng Glossaries B2-C2."; }
+            else if (scaledScore >= 16) { band = "5.0"; feedback = "Tăng cường luyện tập từ đồng nghĩa và cấu trúc câu!"; }
+            else if (scaledScore >= 13) { band = "4.5"; feedback = "Cần tích lũy thêm từ vựng nền tảng."; }
+            else if (scaledScore >= 10) { band = "4.0"; feedback = "Hãy kiên trì học từ vựng mỗi ngày cùng Ms Lê Hằng nhé!"; }
+
+            document.getElementById('modal-score').innerText = `${score}/14`;
+            document.getElementById('modal-band').innerText = band;
+            document.getElementById('modal-feedback').innerText = feedback;
+            document.getElementById('result-modal').classList.remove('hidden');
+
+            // Play celebratory confetti if high score
+            if (score >= 10) {
+                confetti({
+                    particleCount: 120,
+                    spread: 80,
+                    origin: { y: 0.6 }
+                });
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('result-modal').classList.add('hidden');
+        }
+
+        // --- 9. RENDER GLOSSARY TABLE ---
+        function renderGlossary() {
+            const tbody = document.getElementById('glossary-tbody');
+            tbody.innerHTML = glossaryData.map((item, idx) => `
+                <tr class="${idx % 2 === 0 ? 'bg-white' : 'bg-slate-50/70'} hover:bg-indigo-50/50 transition">
+                    <td class="py-2.5 px-3 font-bold text-indigo-700">${item.word}</td>
+                    <td class="py-2.5 px-3 text-slate-500 font-semibold">${item.type}</td>
+                    <td class="py-2.5 px-3">
+                        <span class="font-bold text-slate-800">${item.mean}</span> 
+                        <span class="text-slate-500 text-[11px] block italic">Synonyms: ${item.synonym}</span>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // --- 10. INITIALIZATION ---
+        window.onload = function() {
+            renderGlossary();
+            updateTimerDisplay();
+        };
+    </script>
+</body>
+</html>
